@@ -1,0 +1,26 @@
+Principais Responsabilidades
+
+Apoiar na construção e manutenção de pipelines de dados em ambiente de nuvem.
+Auxiliar na integração de diferentes fontes de dados e na organização de datasets para análise.
+Contribuir para o monitoramento de pipelines, acompanhando logs, métricas e alertas para garantir qualidade e confiabilidade dos dados.
+Apoiar na criação e manutenção de scripts, notebooks e jobs de processamento de dados.
+Colaborar na organização de código, versionamento e automação de deploys junto ao time de engenharia de dados.
+Auxiliar na modelagem e preparação de dados para uso em ferramentas analíticas.
+Dar suporte na otimização de relatórios e modelos no Power BI, seguindo boas práticas de performance e governança.
+Apoiar atividades relacionadas à gestão de acessos e integração entre ambientes de dados.
+
+Competências Técnicas Desejadas
+Conhecimento básico ou acadêmico em engenharia de dados ou análise de dados.
+Noções de computação em nuvem, preferencialmente AWS (S3, Glue, Lambda, Redshift ou serviços similares).
+Familiaridade ou interesse em trabalhar com Databricks ou ambientes de processamento de dados distribuído.
+Conhecimento em SQL e manipulação de dados.
+Noções de versionamento de código (Git).
+Interesse em aprender sobre monitoramento de pipelines e qualidade de dados.
+Conhecimento básico em Power BI ou ferramentas de BI.
+
+Diferenciais
+Conhecimento inicial em Spark, Airflow, dbt ou ferramentas de orquestração de dados.
+Experiência acadêmica ou projetos pessoais envolvendo ETL/ELT e pipelines de dados.
+Noções de boas práticas de engenharia de software (CI/CD, automação, testes).
+Interesse em aprender sobre arquiteturas de dados modernas e Big Data.
+

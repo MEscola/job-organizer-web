@@ -1,0 +1,17 @@
+{
+  "empresa": "Nava",
+  "data": "2026-06-18",
+  "tag_principal": "IMPL",
+  "score_aderencia": 95,
+  "curriculo_enviado": "CV_IMPL.pdf",
+  "motivo": "A descrição foca fortemente em atividades de implementação, construção e manutenção de pipelines de dados, scripts, jobs de processamento, e integração de sistemas em ambiente de nuvem, alinhando-se perfeitamente com o escopo de 'Implementação'.",
+  "ranking_completo": {
+    "DG": 80,
+    "DP": 10,
+    "SUP": 60,
+    "IMPL": 95,
+    "CLOUD": 85,
+    "ADM": 5,
+    "DEFAULT": 0
+  }
+}

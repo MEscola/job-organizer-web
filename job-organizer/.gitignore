@@ -1,0 +1,78 @@
+# Python
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Ambiente virtual
+
+venv/
+env/
+.venv/
+
+# Variáveis de ambiente
+
+.env
+.env.*
+
+# VS Code
+
+.vscode/
+.history/
+
+# JetBrains
+
+.idea/
+
+# Sistema operacional
+
+.DS_Store
+Thumbs.db
+
+# Logs
+
+*.log
+
+# Arquivos temporários
+
+*.tmp
+*.temp
+
+# Arquivos compilados
+
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+# Testes
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Dados gerados pela aplicação
+
+candidaturas/*
+!candidaturas/.gitkeep
+
+vagas/*
+!vagas/.gitkeep
+
+# Currículos pessoais
+
+curriculos/*
+!curriculos/.gitkeep
+
+# Arquivos de dados locais
+
+historico_candidaturas.csv
+
+# Planilhas locais
+
+*.xlsx
+
+notes.txt

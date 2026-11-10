@@ -1,0 +1,17 @@
+{
+  "empresa": "Nava Technology for Business",
+  "data": "2026-06-16",
+  "tag_principal": "IMPL",
+  "score_aderencia": 91,
+  "curriculo_enviado": "CV_IMPL.pdf",
+  "motivo": "Foco em integração de sistemas, Open Finance e implantação de soluções. (Simulado)",
+  "ranking_completo": {
+    "DG": 65,
+    "DP": 40,
+    "SUP": 72,
+    "IMPL": 91,
+    "CLOUD": 58,
+    "ADM": 15,
+    "DEFAULT": 10
+  }
+}

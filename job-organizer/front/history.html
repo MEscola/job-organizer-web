@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Candidaturas - Job Organizer Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div class="max-w-6xl mx-auto p-4">
+        <!-- Header com Navegação -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-4xl font-bold text-gray-800">📊 Histórico de Candidaturas</h1>
+                <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    ← Voltar para Candidaturas
+                </a>
+            </div>
+            
+            <!-- Abas de Navegação -->
+            <div class="flex gap-2 border-b border-gray-300">
+                <a href="/resumes" class="px-4 py-2 border-b-2 border-transparent text-gray-600 hover:text-gray-800 font-bold">
+                    📄 Meus Currículos
+                </a>
+                <a href="/history" class="px-4 py-2 border-b-2 border-blue-500 text-blue-600 font-bold">
+                    📊 Histórico de Candidaturas
+                </a>
+            </div>
+        </div>
+
+        <!-- Conteúdo -->
+        {% if history %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-100 border-b-2 border-gray-300">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Data</th>
+                                <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Empresa</th>
+                                <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Tag</th>
+                                <th class="px-6 py-3 text-center text-sm font-bold text-gray-700">Score</th>
+                                <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Currículo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in history | reverse %}
+                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 text-sm text-gray-700">{{ entry.Data }}</td>
+                                <td class="px-6 py-4 text-sm font-semibold text-gray-800">{{ entry.Empresa }}</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold text-xs">
+                                        {{ entry.Tag }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-center">
+                                    <span class="
+                                        {% if entry.Score >= 90 %}
+                                            bg-green-100 text-green-800
+                                        {% elif entry.Score >= 70 %}
+                                            bg-blue-100 text-blue-800
+                                        {% elif entry.Score >= 50 %}
+                                            bg-yellow-100 text-yellow-800
+                                        {% else %}
+                                            bg-red-100 text-red-800
+                                        {% endif %}
+                                        px-3 py-1 rounded-full font-bold text-xs
+                                    ">
+                                        {{ entry.Score }}%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">{{ entry.Curriculo }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Estatísticas -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-gray-600 text-sm font-bold mb-2">Total de Candidaturas</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ history | length }}</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-gray-600 text-sm font-bold mb-2">Score Médio</p>
+                    <p class="text-3xl font-bold text-blue-600">
+                        {% set avg_score = (history | map(attribute='Score') | list | sum) / (history | length) %}
+                        {{ (avg_score | round(1)) }}%
+                    </p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-gray-600 text-sm font-bold mb-2">Tag Mais Usada</p>
+                    <p class="text-3xl font-bold text-blue-600">
+                        {% set tags = history | map(attribute='Tag') | list %}
+                        {% set most_common_tag = tags | unique | list | first %}
+                        {{ most_common_tag }}
+                    </p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-gray-600 text-sm font-bold mb-2">Última Candidatura</p>
+                    <p class="text-lg font-bold text-blue-600">
+                        {{ (history | reverse | first).Data }}
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div class="bg-white p-8 rounded-lg shadow-md text-center">
+                <p class="text-gray-600 text-lg mb-4">📭 Nenhuma candidatura registrada ainda.</p>
+                <p class="text-gray-500 text-sm mb-6">Comece a organizar suas candidaturas para ver o histórico aqui!</p>
+                <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg inline-block transition">
+                    Criar Primeira Candidatura
+                </a>
+            </div>
+        {% endif %}
+
+        <!-- Dica -->
+        <div class="mt-8 bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <p class="text-blue-700 text-sm">
+                <strong>💡 Dica:</strong> Use este histórico para acompanhar quais currículos geram mais entrevistas e qual tipo de vaga você está recebendo mais oportunidades. Isso ajuda a otimizar sua estratégia de candidatura!
+            </p>
+        </div>
+    </div>
+</body>
+</html>

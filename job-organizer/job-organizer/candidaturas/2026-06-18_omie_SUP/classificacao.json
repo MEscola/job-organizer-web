@@ -1,0 +1,17 @@
+{
+  "empresa": "omie",
+  "data": "2026-06-18",
+  "tag_principal": "SUP",
+  "score_aderencia": 90,
+  "curriculo_enviado": "CV_SUP.pdf",
+  "motivo": "A descrição foca fortemente em atendimento ao cliente, resolução de dúvidas, suporte técnico (acesso remoto, guias passo a passo) e encaminhamento de problemas para equipes especializadas, que são as características principais de um cargo de Suporte.",
+  "ranking_completo": {
+    "DEFAULT": 0,
+    "DG": 10,
+    "DP": 15,
+    "SUP": 95,
+    "IMPL": 40,
+    "CLOUD": 5,
+    "ADM": 0
+  }
+}

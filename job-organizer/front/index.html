@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Organizer Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .progress-bar {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            border-radius: 4px;
+            height: 8px;
+        }
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+        }
+        .score-excellent { background: linear-gradient(135deg, #10b981, #059669); }
+        .score-good { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .score-medium { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .score-low { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-3xl">
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-4xl font-bold text-gray-800">🚀 Job Organizer Pro</h1>
+            <div class="flex gap-2">
+                <a href="/resumes" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    📚 Gerenciar Currículos
+                </a>
+                <a href="/history" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    📊 Histórico
+                </a>
+            </div>
+        </div>
+        
+        {% if error %}
+            <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-4 rounded mb-6" role="alert">
+                <p class="font-bold">Erro ao processar</p>
+                <p class="text-sm">{{ error }}</p>
+            </div>
+        {% endif %}
+
+        {% if success %}
+            <div class="space-y-6">
+                <!-- Cabeçalho de Sucesso -->
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-4 rounded">
+                    <p class="font-bold text-green-700 text-lg">✅ Candidatura Organizada com Sucesso!</p>
+                    <p class="text-green-600 text-sm mt-1">Empresa: <span class="font-semibold">{{ result.empresa }}</span></p>
+                    <p class="text-green-600 text-sm">Data: <span class="font-semibold">{{ result.data }}</span></p>
+                </div>
+
+                <!-- Score de Aderência -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Score Principal -->
+                    <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg">
+                        <p class="text-gray-600 text-sm font-semibold mb-3">SCORE DE ADERÊNCIA</p>
+                        <div class="score-badge {% if result.score_aderencia >= 90 %}score-excellent{% elif result.score_aderencia >= 70 %}score-good{% elif result.score_aderencia >= 50 %}score-medium{% else %}score-low{% endif %}">
+                            {{ result.score_aderencia }}%
+                        </div>
+                        <p class="text-gray-600 text-xs mt-3 text-center">
+                            {% if result.score_aderencia >= 90 %}
+                                <span class="text-green-600 font-semibold">Muito Aderente</span>
+                            {% elif result.score_aderencia >= 70 %}
+                                <span class="text-blue-600 font-semibold">Boa Aderência</span>
+                            {% elif result.score_aderencia >= 50 %}
+                                <span class="text-yellow-600 font-semibold">Aderência Média</span>
+                            {% else %}
+                                <span class="text-red-600 font-semibold">Pouca Aderência</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Tag Principal -->
+                    <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg">
+                        <p class="text-gray-600 text-sm font-semibold mb-3">TAG PRINCIPAL</p>
+                        <div class="bg-blue-500 text-white px-6 py-3 rounded-lg font-bold text-2xl mb-3">
+                            {{ result.tag_principal }}
+                        </div>
+                        <p class="text-gray-600 text-xs text-center">
+                            <span class="font-semibold">Currículo:</span> {{ result.curriculo_enviado }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Motivo da Classificação -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                    <p class="text-gray-700 text-sm font-semibold mb-2">📝 Motivo da Classificação:</p>
+                    <p class="text-gray-700 text-sm">{{ result.motivo }}</p>
+                </div>
+
+                <!-- Ranking Completo de Tags -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <p class="text-gray-800 font-bold mb-4">📊 Ranking de Aderência por Tag:</p>
+                    <div class="space-y-3">
+                        {% set sorted_ranking = result.ranking_completo.items() | list | sort(attribute='1', reverse=True) %}
+                        {% for tag, score in sorted_ranking %}
+                            <div class="flex items-center">
+                                <div class="w-16 text-sm font-bold text-gray-700">{{ tag }}</div>
+                                <div class="flex-1 mx-3">
+                                    <div class="bg-gray-200 rounded-full h-6 overflow-hidden">
+                                        <div class="progress-bar h-full" data-width="{{ score }}"></div>
+                                    </div>
+                                </div>
+                                <div class="w-12 text-right font-bold text-gray-700">{{ score }}%</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Informações Adicionais -->
+                <div class="bg-gray-100 p-4 rounded-lg text-sm text-gray-600">
+                    <p class="mb-2"><strong>📂 Pasta criada:</strong> <code class="bg-gray-200 px-2 py-1 rounded">candidaturas/{{ result.data }}_{{ result.empresa }}_{{ result.tag_principal }}/</code></p>
+                    <p><strong>📋 Arquivos gerados:</strong> vaga.txt, classificacao.json, {{ result.curriculo_enviado }}</p>
+                    <p class="mt-2"><strong>📊 Histórico:</strong> Atualizado em historico_candidaturas.csv</p>
+                </div>
+
+                <!-- Botão para Nova Candidatura -->
+                <button onclick="location.reload()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline w-full transition">
+                    ➕ Organizar Outra Candidatura
+                </button>
+            </div>
+        {% else %}
+            <!-- Formulário de Entrada -->
+            <form method="POST" action="/" class="space-y-6">
+                <div>
+                    <label for="job_description" class="block text-gray-700 text-sm font-bold mb-3">📝 Descrição da Vaga:</label>
+                    <textarea 
+                        id="job_description" 
+                        name="job_description" 
+                        rows="10" 
+                        class="shadow appearance-none border-2 border-gray-300 rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 transition" 
+                        placeholder="Cole a descrição completa da vaga aqui. Inclua responsabilidades, requisitos, tecnologias, etc..."
+                        required></textarea>
+                </div>
+
+                <div>
+                    <label for="company_name" class="block text-gray-700 text-sm font-bold mb-3">🏢 Nome da Empresa:</label>
+                    <input 
+                        type="text" 
+                        id="company_name" 
+                        name="company_name" 
+                        class="shadow appearance-none border-2 border-gray-300 rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 transition" 
+                        placeholder="Ex: Google, Lina Open X, Microsoft..."
+                        required>
+                </div>
+
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                    <p class="text-blue-700 text-sm">
+                        <strong>💡 Dica:</strong> Quanto mais detalhada a descrição da vaga, mais precisa será a análise da IA na classificação e no score de aderência.
+                    </p>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline w-full transition transform hover:scale-105">
+                    🚀 Organizar Candidatura
+                </button>
+            </form>
+
+            <!-- Informações sobre as Tags -->
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <p class="text-gray-700 text-sm font-bold mb-4">📚 Tags Disponíveis:</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                    <div class="bg-gray-100 p-2 rounded text-center"><strong>DG</strong><br><span class="text-gray-600">Desenvolvimento Geral</span></div>
+                    <div class="bg-gray-100 p-2 rounded text-center"><strong>DP</strong><br><span class="text-gray-600">Desenvolvimento Python</span></div>
+                    <div class="bg-gray-100 p-2 rounded text-center"><strong>SUP</strong><br><span class="text-gray-600">Suporte Técnico</span></div>
+                    <div class="bg-gray-100 p-2 rounded text-center"><strong>IMPL</strong><br><span class="text-gray-600">Implantação</span></div>
+                    <div class="bg-gray-100 p-2 rounded text-center"><strong>CLOUD</strong><br><span class="text-gray-600">Cloud/DevOps</span></div>
+                    <div class="bg-gray-100 p-2 rounded text-center"><strong>ADM</strong><br><span class="text-gray-600">Administração</span></div>
+                    <div class="bg-gray-100 p-2 rounded text-center"><strong>DEFAULT</strong><br><span class="text-gray-600">Padrão</span></div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

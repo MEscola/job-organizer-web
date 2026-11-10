@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Currículos - Job Organizer Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .file-input-label {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .file-input-label:hover {
+            background-color: #e0e7ff;
+        }
+        .resume-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .resume-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div class="max-w-6xl mx-auto p-4">
+        <!-- Header com Navegação -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-4xl font-bold text-gray-800">📚 Gerenciar Currículos</h1>
+                <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                    ← Voltar para Candidaturas
+                </a>
+            </div>
+            
+            <!-- Abas de Navegação -->
+            <div class="flex gap-2 border-b border-gray-300">
+                <a href="/resumes" class="px-4 py-2 border-b-2 border-blue-500 text-blue-600 font-bold">
+                    📄 Meus Currículos
+                </a>
+                <a href="/history" class="px-4 py-2 border-b-2 border-transparent text-gray-600 hover:text-gray-800 font-bold">
+                    📊 Histórico de Candidaturas
+                </a>
+            </div>
+        </div>
+
+        <!-- Mensagens de Feedback -->
+        <div id="message-container"></div>
+
+        <!-- Grid de Currículos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for resume in resumes %}
+            <div class="resume-card bg-white p-6 rounded-lg shadow-md">
+                <!-- Cabeçalho do Card -->
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">{{ resume.tag }}</h3>
+                        <p class="text-sm text-gray-600">{{ resume.description }}</p>
+                    </div>
+                    {% if resume.exists %}
+                    <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">✓ Ativo</span>
+                    {% else %}
+                    <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded">✗ Vazio</span>
+                    {% endif %}
+                </div>
+
+                <!-- Informações do Arquivo -->
+                {% if resume.exists %}
+                <div class="bg-gray-50 p-3 rounded mb-4 text-sm">
+                    <p class="text-gray-700"><strong>Arquivo:</strong> {{ resume.filename }}</p>
+                    <p class="text-gray-700"><strong>Tamanho:</strong> {{ (resume.size / 1024) | round(2) }} KB</p>
+                    <p class="text-gray-700"><strong>Atualizado:</strong> {{ resume.modified }}</p>
+                </div>
+                {% else %}
+                <div class="bg-yellow-50 p-3 rounded mb-4 text-sm text-yellow-800">
+                    <p>Nenhum currículo enviado para esta categoria.</p>
+                </div>
+                {% endif %}
+
+                <!-- Área de Upload -->
+                <div class="mb-4">
+                    <form class="upload-form" data-tag="{{ resume.tag }}">
+                        <label class="file-input-label block border-2 border-dashed border-blue-300 rounded-lg p-4 text-center bg-blue-50 hover:bg-blue-100">
+                            <input type="file" name="file" accept=".pdf" class="hidden" required>
+                            <div class="text-blue-600">
+                                <p class="font-bold">📤 Clique para selecionar</p>
+                                <p class="text-sm">ou arraste um arquivo PDF</p>
+                            </div>
+                        </label>
+                        <input type="hidden" name="tag" value="{{ resume.tag }}">
+                    </form>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="flex gap-2">
+                    <button class="upload-btn flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded transition" data-tag="{{ resume.tag }}">
+                        ✓ Enviar
+                    </button>
+                    {% if resume.exists and resume.tag != 'DEFAULT' %}
+                    <button class="delete-btn flex-1 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded transition" data-tag="{{ resume.tag }}">
+                        🗑️ Deletar
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Dica -->
+        <div class="mt-8 bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <p class="text-blue-700 text-sm">
+                <strong>💡 Dica:</strong> Você pode ter até 7 versões diferentes do seu currículo, cada uma otimizada para um tipo de vaga. Mantenha-os atualizados para ter as melhores chances!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Configurar drag and drop
+        document.querySelectorAll('.upload-form').forEach(form => {
+            form.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                form.querySelector('label').classList.add('bg-blue-200');
+            });
+            
+            form.addEventListener('dragleave', () => {
+                form.querySelector('label').classList.remove('bg-blue-200');
+            });
+            
+            form.addEventListener('drop', (e) => {
+                e.preventDefault();
+                form.querySelector('label').classList.remove('bg-blue-200');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    form.querySelector('input[type="file"]').files = files;
+                }
+            });
+        });
+
+        // Função para exibir mensagens
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('message-container');
+            const bgColor = type === 'success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500';
+            const textColor = type === 'success' ? 'text-green-700' : 'text-red-700';
+            
+            const messageEl = document.createElement('div');
+            messageEl.className = `${bgColor} border-l-4 ${textColor} px-4 py-3 rounded mb-4`;
+            messageEl.textContent = message;
+            
+            container.appendChild(messageEl);
+            
+            setTimeout(() => messageEl.remove(), 5000);
+        }
+
+        // Upload de arquivo
+        document.querySelectorAll('.upload-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const tag = btn.dataset.tag;
+                const form = document.querySelector(`.upload-form[data-tag="${tag}"]`);
+                const fileInput = form.querySelector('input[type="file"]');
+                
+                if (!fileInput.files.length) {
+                    showMessage('Selecione um arquivo PDF primeiro.', 'error');
+                    return;
+                }
+                
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('tag', tag);
+                
+                btn.disabled = true;
+                btn.textContent = '⏳ Enviando...';
+                
+                try {
+                    const response = await fetch('/upload-resume', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        fileInput.value = '';
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Erro ao enviar arquivo: ' + error.message, 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = '✓ Enviar';
+                }
+            });
+        });
+
+        // Deletar arquivo
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                if (!confirm('Tem certeza que deseja deletar este currículo?')) {
+                    return;
+                }
+                
+                const tag = btn.dataset.tag;
+                
+                btn.disabled = true;
+                btn.textContent = '⏳ Deletando...';
+                
+                try {
+                    const response = await fetch('/delete-resume', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `tag=${tag}`
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Erro ao deletar arquivo: ' + error.message, 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = '🗑️ Deletar';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
